@@ -1,16 +1,37 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in super_admin.gemspec.
 gemspec
 
-gem "puma"
+# Development & test tooling
 
-gem "sqlite3"
+gem "sqlite3", "~> 2.8"
 
-gem "propshaft"
+group :development, :test do
+  gem "puma", "~> 7.1"
+  gem "debug"
+  gem "pry-rails"
+  gem "rubocop", ">= 1.65", require: false
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
+  gem "rubocop-minitest", require: false
+  gem "rubocop-rails-omakase", require: false
+end
 
-# Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
-gem "rubocop-rails-omakase", require: false
+group :test do
+  gem "capybara", ">= 3.39"
+  gem "minitest", ">= 5.0"
+  gem "minitest-reporters"
+  gem "selenium-webdriver"
+  gem "webdrivers"
+  gem "simplecov", require: false
+end
 
-# Start debugger with binding.b [https://github.com/ruby/debug]
-# gem "debug", ">= 1.0.0"
+group :development do
+  gem "bullet"
+  gem "yard", "~> 0.9", require: false
+  gem "yard-rails", require: false
+  gem "tailwindcss-rails", "~> 3.0", require: false
+  gem "propshaft", "~> 1.0"
+end

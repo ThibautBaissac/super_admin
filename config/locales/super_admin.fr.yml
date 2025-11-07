@@ -1,0 +1,197 @@
+fr:
+  time:
+    formats:
+      long: "%d %B %Y %H:%M"
+  super_admin:
+    layout:
+      window_title: "SuperAdmin - %{page_title}"
+      default_page_title: "Administration"
+      footer: "SuperAdmin - %{year}"
+    flash:
+      access_denied: "Vous n'avez pas les droits d'accès à cette section."
+    navigation:
+      brand: "SuperAdmin"
+      return_to_app: "Retour à l'app"
+      dashboard: "Dashboard"
+      exports: "Exports CSV"
+      audit_logs: "Journal d'activité"
+      models_heading: "Modèles (%{count})"
+    dashboard:
+      index:
+        page_title: "Dashboard"
+        breadcrumb: "Dashboard"
+        heading: "Dashboard SuperAdmin"
+        intro: "Gestion complète de tous les modèles de l'application"
+        stats:
+          models_label: "Modèles disponibles"
+          records_label: "Total enregistrements"
+          users_label: "Utilisateurs"
+        table:
+          title: "Tous les modèles"
+          headers:
+            model: "Modèle"
+            table: "Table"
+            records: "Enregistrements"
+            actions: "Actions"
+          manage: "Gérer →"
+    resources:
+      shared:
+        search_placeholder: "Rechercher..."
+        search_button: "Rechercher"
+        reset_filters: "Réinitialiser"
+        advanced_filters: "Filtres avancés"
+        contains_placeholder: "Contient..."
+        boolean_options:
+          placeholder: "—"
+          yes: "Oui"
+          no: "Non"
+        min_placeholder: "Min"
+        max_placeholder: "Max"
+        clear_filters: "Effacer les filtres"
+        apply_filters: "Appliquer"
+        bulk:
+          selected_suffix: "sélectionné(s)"
+          action_placeholder: "Action de masse"
+          destroy_action: "Supprimer la sélection"
+          apply: "Appliquer"
+          confirm: "Confirmer l'action sélectionnée sur les éléments cochés ?"
+          select_all_label: "Sélectionner tous les éléments"
+          select_item_label: "Sélectionner l'élément %{id}"
+      nested:
+        collection_hint: "Les modifications seront enregistrées lors de la sauvegarde."
+        add: "Ajouter %{model}"
+        remove: "Supprimer"
+        remove_hint: "Cocher pour supprimer l'élément lors de l'enregistrement."
+        entry_existing: "%{model} #%{id}"
+        entry_new: "Nouvel(le) %{model}"
+        missing_association: "Association %{name} introuvable."
+        max_depth_exceeded: "Profondeur maximale de nesting atteinte (%{max} niveaux). Impossible d'imbriquer davantage."
+      index:
+        export_csv: "Exporter en CSV"
+        view_exports: "Voir les exports"
+        new: "Créer"
+        records_count:
+          zero: "%{total} enregistrement"
+          one: "%{total} enregistrement"
+          other: "%{total} enregistrements"
+        actions_header: "Actions"
+        view: "Voir"
+        edit: "Éditer"
+        delete: "Supprimer"
+        delete_confirm: "Êtes-vous sûr ?"
+        empty_state: "Aucun enregistrement ne correspond à votre recherche."
+      form:
+        error_heading:
+          one: "1 erreur a empêché la sauvegarde :"
+          other: "%{count} erreurs ont empêché la sauvegarde :"
+        cancel: "Annuler"
+        create: "Créer"
+        update: "Mettre à jour"
+        boolean_hint: "Cocher pour activer"
+        array_placeholder: "Saisissez une valeur par ligne ou séparez-les par des virgules"
+        association_limited: "Affichage des %{count} premiers résultats sur %{total} au total. Utilisez la recherche pour affiner."
+      new:
+        page_title: "Nouveau - %{model}"
+        breadcrumb: "Nouveau"
+        heading: "Créer %{model}"
+      edit:
+        page_title: "Éditer - %{model}"
+        breadcrumb: "Éditer"
+        heading: "Éditer %{model} #%{id}"
+      show:
+        page_title: "Détails - %{model}"
+        breadcrumb_id: "#%{id}"
+        heading: "%{model} #%{id}"
+        edit: "Éditer"
+        delete: "Supprimer"
+        delete_confirm: "Êtes-vous sûr de vouloir supprimer cet enregistrement ?"
+        attributes: "Attributs"
+        associations: "Associations"
+        association_count_html:
+          one: "%{number} enregistrement"
+          other: "%{number} enregistrements"
+        association_none: "Aucun"
+        association_error: "Erreur : %{message}"
+        created_at: "Créé le %{date}"
+        updated_at: "Modifié le %{date}"
+      flash:
+        create:
+          success: "%{model} créé avec succès."
+        update:
+          success: "%{model} modifié avec succès."
+        destroy:
+          success: "%{model} supprimé avec succès."
+          dependencies: "Impossible de supprimer : des enregistrements dépendent de cette ressource."
+        bulk:
+          success: "%{count} %{model} supprimé(s) avec succès."
+          selection_required: "Sélectionnez au moins un enregistrement."
+          unsupported_action: "Action de masse non supportée."
+          dependencies: "Impossible de supprimer certains enregistrements car ils possèdent des dépendances."
+        load_model_failed: "Modèle introuvable : %{resource}"
+        not_found: "%{model} introuvable."
+    exports:
+      index:
+        title: "Exports CSV"
+        breadcrumb: "Exports"
+        heading: "Exports CSV"
+        subtitle: "Suivez l'avancement des exports et téléchargez-les une fois prêts."
+        back_to_resources: "Retour au dashboard"
+        processing_hint: "Traitement en cours… Vous pouvez fermer cette page."
+        expiration_hint: "Disponible jusqu'au %{date}"
+        download: "Télécharger"
+        pending: "En attente"
+        delete: "Supprimer"
+        delete_confirm: "Êtes-vous sûr de vouloir supprimer cet export ?"
+        empty: "Aucun export généré pour le moment."
+        table:
+          headers:
+            created_at: "Créé le"
+            resource: "Ressource"
+            status: "Statut"
+            records: "Enregistrements"
+            actions: "Actions"
+      show:
+        title: "Export %{token}"
+        heading: "Export %{resource}"
+        download: "Télécharger le CSV"
+        created_at: "Créé le"
+        status: "Statut"
+        records: "Nombre d'enregistrements"
+        expires_at: "Expire le"
+        error: "Erreur"
+      status:
+        pending: "En attente"
+        processing: "Traitement"
+        ready: "Prêt"
+        failed: "Échec"
+      flash:
+        created: "Export en cours. Rafraîchissez la page des exports pour suivre l'avancement (token %{token})."
+        unavailable: "Le fichier n'est pas encore disponible."
+        expired: "Ce fichier a expiré et n'est plus téléchargeable."
+        not_found: "Export introuvable."
+        destroyed: "Export supprimé avec succès."
+    audit_logs:
+      title: "Journal d'activité"
+      subtitle: "Suivez toutes les actions administratives effectuées dans SuperAdmin."
+      table_title: "Activité récente"
+      unknown_user: "Utilisateur inconnu"
+      view_changes: "Voir les modifications"
+      filters:
+        search: "Rechercher"
+        all_actions: "Toutes les actions"
+        all_resources: "Toutes les ressources"
+        apply: "Filtrer"
+      headers:
+        performed_at: "Effectué le"
+        user: "Utilisateur"
+        resource: "Ressource"
+        action: "Action"
+        changes: "Modifications"
+        context: "Contexte"
+      empty: "Aucune activité enregistrée pour le moment."
+      missing_table: "Le journal d'activité est indisponible. Lancez les migrations SuperAdmin pour créer la table correspondante."
+    helpers:
+      resources:
+        empty_string: "(vide)"
+    actions:
+      close: "Fermer"

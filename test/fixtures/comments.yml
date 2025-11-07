@@ -1,0 +1,35 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+john_comment_on_first_post:
+  commentable: first_post (Post)
+  user: john
+  content: Great article! Very informative.
+  status: approved
+  likes_count: 5
+  approved_at: <%= 2.days.ago %>
+  ip_address: 192.168.1.1
+
+jane_comment_on_first_post:
+  commentable: first_post (Post)
+  user: jane
+  content: Thanks for sharing this!
+  status: approved
+  likes_count: 2
+  approved_at: <%= 1.day.ago %>
+  ip_address: 192.168.1.2
+
+pending_comment:
+  commentable: second_post (Post)
+  user: john
+  content: This is a pending comment waiting for approval.
+  status: pending
+  likes_count: 0
+  ip_address: 192.168.1.1
+
+spam_comment:
+  commentable: first_post (Post)
+  user: admin
+  content: This looks like spam and should be filtered.
+  status: spam
+  likes_count: 0
+  ip_address: 10.0.0.1

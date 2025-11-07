@@ -1,0 +1,27 @@
+services:
+  gem-dev:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspace:cached
+      - gem_cache:/usr/local/bundle
+      - bash_history:/home/vscode/.bash_history_dir
+    working_dir: /workspace
+    command: sleep infinity
+    environment:
+      - RAILS_ENV=development
+      - RAILS_LOG_TO_STDOUT=true
+      - HISTFILE=/home/vscode/.bash_history_dir/.bash_history
+    # Configurer les capacités pour Chrome (pour les tests)
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp:unconfined
+    # Port pour les serveurs Rails potentiels
+    ports:
+      - "3000:3000"
+
+volumes:
+  gem_cache:
+  bash_history:

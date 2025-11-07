@@ -1,0 +1,59 @@
+<%# Rendu des champs nested attributes pour une association accepts_nested_attributes_for %>
+<%# Locals: form, parent_model_class, association, nested_model_class, nested_attributes, nested_options, label, current_depth %>
+
+<% association_name = association.name %>
+<% current_depth ||= 0 %>
+<% max_depth = SuperAdmin.max_nested_depth %>
+
+<% new_record_template = capture do %>
+  <%= form.fields_for(association_name, association.klass.new, child_index: "__NEW_RECORD__") do |nested_form| %>
+    <%= render "super_admin/shared/nested_record_fields",
+      form: nested_form,
+      association: association,
+      nested_model_class: nested_model_class,
+      nested_attributes: nested_attributes,
+      nested_options: nested_options,
+      new_record: true,
+      current_depth: current_depth + 1 %>
+  <% end %>
+<% end %>
+
+<div class="mb-6 space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-4"
+     data-controller="super-admin--nested-form">
+  <div class="flex items-center justify-between">
+    <h3 class="text-base font-semibold text-gray-800">
+      <%= label %>
+      <% if current_depth > 0 %>
+        <span class="ml-2 text-xs text-gray-500">(niveau <%= current_depth + 1 %>/<%= max_depth %>)</span>
+      <% end %>
+    </h3>
+    <% if association.collection? %>
+      <span class="text-xs text-gray-500"><%= t("super_admin.resources.nested.collection_hint") %></span>
+    <% end %>
+  </div>
+
+  <div class="space-y-4" data-super-admin--nested-form-target="entries">
+    <%= form.fields_for association_name do |nested_form| %>
+      <%= render "super_admin/shared/nested_record_fields",
+        form: nested_form,
+        association: association,
+        nested_model_class: nested_model_class,
+        nested_attributes: nested_attributes,
+        nested_options: nested_options,
+        new_record: nested_form.object.new_record?,
+        current_depth: current_depth + 1 %>
+    <% end %>
+  </div>
+
+  <template data-super-admin--nested-form-target="template">
+    <%= new_record_template %>
+  </template>
+
+  <div class="pt-2">
+    <button type="button"
+            class="inline-flex items-center rounded-md border border-dashed border-blue-300 px-3 py-2 text-sm font-medium text-blue-600 hover-border-blue-400 hover-text-blue-700"
+            data-action="super-admin--nested-form#add">
+      <%= t("super_admin.resources.nested.add", model: nested_model_class.model_name.human(count: 1)) %>
+    </button>
+  </div>
+</div>

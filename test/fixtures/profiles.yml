@@ -1,0 +1,47 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+john_profile:
+  user: john
+  avatar_url: https://example.com/avatars/john.jpg
+  bio: Software developer and tech enthusiast
+  birth_date: <%= 30.years.ago.to_date %>
+  preferred_notification_time: <%= Time.parse("09:00") %>
+  rating: 4.75
+  preferences: '{"theme": "dark", "language": "en", "items_per_page": "25"}'
+  social_links: '{"twitter": "@johndoe", "github": "johndoe", "linkedin": "john-doe"}'
+  phone_number: "+1-555-0100"
+  website: https://johndoe.com
+  timezone: America/New_York
+  notification_frequency: 2
+  email_notifications: true
+  sms_notifications: false
+
+jane_profile:
+  user: jane
+  avatar_url: https://example.com/avatars/jane.jpg
+  bio: Content creator and writer
+  birth_date: <%= 28.years.ago.to_date %>
+  preferred_notification_time: <%= Time.parse("10:30") %>
+  rating: 4.90
+  preferences: '{"theme": "light", "language": "en", "items_per_page": "50"}'
+  social_links: '{"twitter": "@janesmith", "linkedin": "jane-smith"}'
+  phone_number: "+1-555-0101"
+  website: https://janesmith.blog
+  timezone: America/Los_Angeles
+  notification_frequency: 1
+  email_notifications: true
+  sms_notifications: true
+
+admin_profile:
+  user: admin
+  avatar_url: https://example.com/avatars/admin.jpg
+  bio: System administrator
+  birth_date: <%= 35.years.ago.to_date %>
+  preferred_notification_time: <%= Time.parse("08:00") %>
+  rating: 5.00
+  preferences: '{"theme": "auto", "language": "en", "items_per_page": "100"}'
+  social_links: '{}'
+  timezone: UTC
+  notification_frequency: 4
+  email_notifications: true
+  sms_notifications: true

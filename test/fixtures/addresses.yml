@@ -1,0 +1,60 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+john_home:
+  user: john
+  address_type: home
+  street_line1: 123 Main Street
+  street_line2: Apt 4B
+  city: New York
+  state: NY
+  postal_code: "10001"
+  country: USA
+  is_primary: true
+  latitude: 40.7128
+  longitude: -74.0060
+
+john_work:
+  user: john
+  address_type: work
+  street_line1: 456 Business Ave
+  city: New York
+  state: NY
+  postal_code: "10002"
+  country: USA
+  is_primary: false
+  latitude: 40.7589
+  longitude: -73.9851
+
+jane_home:
+  user: jane
+  address_type: home
+  street_line1: 789 Oak Drive
+  city: San Francisco
+  state: CA
+  postal_code: "94102"
+  country: USA
+  is_primary: true
+  latitude: 37.7749
+  longitude: -122.4194
+
+jane_billing:
+  user: jane
+  address_type: billing
+  street_line1: 789 Oak Drive
+  city: San Francisco
+  state: CA
+  postal_code: "94102"
+  country: USA
+  is_primary: false
+
+admin_home:
+  user: admin
+  address_type: home
+  street_line1: 321 Admin Boulevard
+  city: Seattle
+  state: WA
+  postal_code: "98101"
+  country: USA
+  is_primary: true
+  latitude: 47.6062
+  longitude: -122.3321

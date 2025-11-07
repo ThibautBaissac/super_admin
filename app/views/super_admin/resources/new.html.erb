@@ -1,0 +1,31 @@
+<% content_for :title, t("super_admin.resources.new.page_title", model: model_display_name(@model_class)) %>
+<% content_for :breadcrumbs do %>
+  <li class="flex items-center">
+    <svg class="h-5 w-5 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+    </svg>
+    <%= link_to model_display_name(@model_class), super_admin_resources_path(resource: params[:resource]), class: "text-blue-600 hover-text-blue-800" %>
+  </li>
+  <li class="flex items-center">
+    <svg class="h-5 w-5 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+    </svg>
+    <span class="text-gray-900 font-medium"><%= t("super_admin.resources.new.breadcrumb") %></span>
+  </li>
+<% end %>
+
+<div class="max-w-3xl mx-auto">
+  <!-- Header -->
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">
+      <%= t("super_admin.resources.new.heading", model: @model_class.model_name.human.downcase) %>
+    </h1>
+  </div>
+
+  <!-- Form Card -->
+  <div class="bg-white rounded-lg shadow border border-gray-200">
+    <div class="px-6 py-8">
+      <%= render "form", resource: @resource, model_class: @model_class, editable_attributes: @editable_attributes %>
+    </div>
+  </div>
+</div>

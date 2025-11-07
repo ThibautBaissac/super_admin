@@ -1,0 +1,42 @@
+<%# Formulaire générique pour création/édition de ressources %>
+<%# Locals: resource, model_class, editable_attributes %>
+
+<%= form_with model: resource, url: resource.new_record? ? super_admin_resources_path(resource: params[:resource]) : super_admin_resource_path(resource: params[:resource], id: resource.id), method: resource.new_record? ? :post : :patch, local: true do |f| %>
+
+  <!-- Erreurs globales -->
+  <% if resource.errors.any? %>
+    <div class="mb-6 bg-red-50 border border-red-200 rounded-md p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800">
+            <%= t("super_admin.resources.form.error_heading", count: resource.errors.count) %>
+          </h3>
+          <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+            <% resource.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Champs du formulaire -->
+  <div class="space-y-6">
+    <% editable_attributes.each do |attribute| %>
+      <%= render "super_admin/shared/form_field", form: f, model_class: model_class, attribute_name: attribute %>
+    <% end %>
+  </div>
+
+  <!-- Actions -->
+  <div class="mt-8 flex items-center justify-between border-t border-gray-200 pt-6">
+    <%= link_to t("super_admin.resources.form.cancel"), resource.new_record? ? super_admin_resources_path(resource: params[:resource]) : super_admin_resource_path(resource: params[:resource], id: resource.id), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+
+    <%= f.submit resource.new_record? ? t("super_admin.resources.form.create") : t("super_admin.resources.form.update"), class: "inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover-bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus-ring-blue-500" %>
+  </div>
+<% end %>

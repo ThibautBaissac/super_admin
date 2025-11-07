@@ -1,0 +1,116 @@
+{
+  "name": "SuperAdmin Gem Development",
+  "dockerComposeFile": "compose.yaml",
+  "service": "gem-dev",
+  "workspaceFolder": "/workspace",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // Ruby LSP et support
+        "Shopify.ruby-lsp",
+        "kaiwood.endwise",
+        "rebornix.ruby",
+
+        // Tests et debugging
+        "hbenl.vscode-test-explorer",
+        "connorshea.vscode-ruby-test-adapter",
+
+        // Git et collaboration
+        "eamodio.gitlens",
+        "GitHub.vscode-pull-request-github",
+
+        // Qualité de code
+        "esbenp.prettier-vscode",
+        "EditorConfig.EditorConfig",
+
+        // Productivité
+        "wayou.vscode-todo-highlight",
+        "usernamehw.errorlens",
+        "aaron-bond.better-comments"
+      ],
+      "settings": {
+        // Ruby LSP
+        "ruby.lsp.enableExperimentalFeatures": true,
+        "ruby.lsp.formatter": "rubocop",
+        "ruby.useLanguageServer": true,
+
+        // Formatage
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "Shopify.ruby-lsp",
+        "[ruby]": {
+          "editor.defaultFormatter": "Shopify.ruby-lsp",
+          "editor.formatOnSave": true,
+          "editor.tabSize": 2,
+          "editor.insertSpaces": true
+        },
+
+        // Fichiers
+        "files.associations": {
+          "*.erb": "erb",
+          "Gemfile": "ruby",
+          "Rakefile": "ruby",
+          "*.gemspec": "ruby"
+        },
+        "files.exclude": {
+          "**/tmp": true,
+          "**/log": true,
+          "**/coverage": true,
+          "**/.bundle": true
+        },
+
+        // Terminal
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash",
+            "icon": "terminal-bash"
+          }
+        },
+
+        // Tests
+        "ruby.testFramework": "minitest",
+        "testExplorer.useNativeTesting": true,
+
+        // Git
+        "git.autofetch": true,
+        "git.confirmSync": false,
+
+        // Éditeur
+        "editor.rulers": [120],
+        "editor.minimap.enabled": true,
+        "editor.suggestSelection": "first",
+        "editor.bracketPairColorization.enabled": true
+      }
+    }
+  },
+
+  // Commandes de lifecycle
+  "postCreateCommand": "bundle install && cd test/dummy && bin/rails db:setup",
+  "postStartCommand": "echo '🚀 SuperAdmin dev container is ready!'",
+
+  // Features additionnelles
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    }
+  },
+
+  // Utilisateur non-root pour plus de sécurité
+  "remoteUser": "vscode",
+
+  // Ports forwarding
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Rails Server",
+      "onAutoForward": "notify"
+    }
+  },
+
+  // Variables d'environnement pour le container
+  "remoteEnv": {
+    "BUNDLE_PATH": "/usr/local/bundle",
+    "EDITOR": "code --wait"
+  }
+}

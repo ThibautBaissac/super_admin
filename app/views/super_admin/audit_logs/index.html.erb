@@ -1,0 +1,143 @@
+<% content_for :title, t("super_admin.audit_logs.title") %>
+<% content_for :breadcrumbs do %>
+  <li class="flex items-center">
+    <span class="text-gray-900 font-medium"><%= t("super_admin.audit_logs.title") %></span>
+  </li>
+<% end %>
+
+<div class="max-w-7xl mx-auto">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900"><%= t("super_admin.audit_logs.title") %></h1>
+    <p class="mt-2 text-sm text-gray-600">
+      <%= t("super_admin.audit_logs.subtitle") %>
+    </p>
+  </div>
+
+  <!-- Filters -->
+  <div class="mb-6 bg-white rounded-lg shadow border border-gray-200 p-4">
+    <%= form_with url: super_admin_audit_logs_path, method: :get, local: true, class: "flex flex-wrap gap-3 items-end" do |form| %>
+      <div class="flex-1 min-w-[200px]">
+        <%= form.text_field :query, value: params[:query], placeholder: t("super_admin.audit_logs.filters.search"), class: "sa-input w-full" %>
+      </div>
+      <div class="min-w-[180px]">
+        <%= form.select :action_type, audit_action_options, include_blank: t("super_admin.audit_logs.filters.all_actions"), selected: params[:action_type], class: "sa-select w-full" %>
+      </div>
+      <div class="min-w-[180px]">
+        <%= form.select :resource_type, audit_resource_options, include_blank: t("super_admin.audit_logs.filters.all_resources"), selected: params[:resource_type], class: "sa-select w-full" %>
+      </div>
+      <%= form.submit t("super_admin.audit_logs.filters.apply"), class: "sa-btn sa-btn-primary" %>
+    <% end %>
+  </div>
+
+  <!-- Audit Logs Table -->
+  <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg font-medium text-gray-900"><%= t("super_admin.audit_logs.table_title") %></h2>
+    </div>
+    <div class="overflow-x-auto">
+      <% if @audit_logs.any? %>
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= t("super_admin.audit_logs.headers.performed_at") %>
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= t("super_admin.audit_logs.headers.user") %>
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= t("super_admin.audit_logs.headers.resource") %>
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= t("super_admin.audit_logs.headers.action") %>
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= t("super_admin.audit_logs.headers.changes") %>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @audit_logs.each do |log| %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <%= l log.performed_at, format: :long %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
+                      <span class="text-xs font-medium text-gray-700">
+                        <%= (log.user_email || t("super_admin.audit_logs.unknown_user"))[0..1].upcase %>
+                      </span>
+                    </div>
+                    <div class="ml-3">
+                      <div class="text-sm font-medium text-gray-900">
+                        <%= log.user_email || t("super_admin.audit_logs.unknown_user") %>
+                      </div>
+                      <% if log.user_id.present? %>
+                        <div class="text-xs text-gray-500">
+                          ID: <%= log.user_id %>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">
+                    <%= log.resource_type %>
+                  </div>
+                  <% if log.resource_id.present? %>
+                    <div class="text-xs text-gray-500">
+                      ID: <%= log.resource_id %>
+                    </div>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold leading-5 rounded-full <%= action_badge_class(log.action) %>">
+                    <%= log.action.humanize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-900">
+                  <% if log.changes_snapshot.present? %>
+                    <details class="cursor-pointer">
+                      <summary class="text-sm font-medium text-blue-600 hover:text-blue-900">
+                        <%= t("super_admin.audit_logs.view_changes") %>
+                      </summary>
+                      <pre class="mt-2 whitespace-pre-wrap text-xs bg-gray-50 rounded p-2 max-w-md overflow-auto"><%= JSON.pretty_generate(log.changes_snapshot) %></pre>
+                    </details>
+                  <% else %>
+                    <span class="text-gray-400">—</span>
+                  <% end %>
+                  <% if log.context.present? %>
+                    <details class="mt-2 cursor-pointer">
+                      <summary class="text-xs text-gray-500 hover:text-gray-700">
+                        <%= t("super_admin.audit_logs.headers.context") %>
+                      </summary>
+                      <pre class="mt-1 whitespace-pre-wrap text-xs bg-gray-50 rounded p-2 max-w-md overflow-auto"><%= JSON.pretty_generate(log.context) %></pre>
+                    </details>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <div class="p-12 text-center">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <p class="mt-4 text-sm text-gray-500">
+            <%= t("super_admin.audit_logs.empty") %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <% if defined?(@pagy) && @pagy.pages > 1 %>
+    <div class="mt-6">
+      <%= pagy_nav(@pagy) %>
+    </div>
+  <% end %>
+</div>

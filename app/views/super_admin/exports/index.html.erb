@@ -1,0 +1,84 @@
+<% content_for :title, t("super_admin.exports.index.title") %>
+<% content_for :breadcrumbs do %>
+  <li class="flex items-center">
+    <svg class="h-5 w-5 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+    </svg>
+    <span class="text-gray-900 font-medium"><%= t("super_admin.exports.index.breadcrumb") %></span>
+  </li>
+<% end %>
+
+<div class="max-w-5xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900"><%= t("super_admin.exports.index.heading") %></h1>
+      <p class="mt-1 text-sm text-gray-600"><%= t("super_admin.exports.index.subtitle") %></p>
+    </div>
+    <%= link_to t("super_admin.exports.index.back_to_resources"), super_admin_root_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("super_admin.exports.index.table.headers.created_at") %></th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("super_admin.exports.index.table.headers.resource") %></th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("super_admin.exports.index.table.headers.status") %></th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("super_admin.exports.index.table.headers.records") %></th>
+          <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t("super_admin.exports.index.table.headers.actions") %></th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% if @exports.any? %>
+          <% @exports.each do |export| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= l(export.created_at, format: :long) %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><%= export.resource_name.humanize %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= export_badge_classes(export) %>">
+                  <%= t("super_admin.exports.status.#{export.status}") %>
+                </span>
+                <% if export.failed_status? && export.error_message.present? %>
+                  <p class="mt-1 text-xs text-red-600"><%= export.error_message %></p>
+                <% elsif export.processing_status? %>
+                  <p class="mt-1 text-xs text-gray-500"><%= t("super_admin.exports.index.processing_hint") %></p>
+                <% elsif export.ready_status? && export.expires_at.present? %>
+                  <p class="mt-1 text-xs text-gray-500"><%= t("super_admin.exports.index.expiration_hint", date: l(export.expires_at, format: :short)) %></p>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                <% if export.records_count.present? %>
+                  <%= number_with_delimiter(export.records_count) %>
+                <% else %>
+                  <span class="text-gray-400">—</span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex items-center justify-end gap-3">
+                  <% if export.ready_for_download? %>
+                    <%= link_to t("super_admin.exports.index.download"), download_super_admin_export_path(export.token), class: "text-blue-600 hover-text-blue-900" %>
+                  <% else %>
+                    <span class="text-gray-400"><%= t("super_admin.exports.index.pending") %></span>
+                  <% end %>
+                  <%= button_to t("super_admin.exports.index.delete"), super_admin_export_path(export.token), method: :delete, form: { data: { turbo_confirm: t("super_admin.exports.index.delete_confirm") } }, class: "text-red-600 hover-text-red-900" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="5" class="px-6 py-8 text-center text-sm text-gray-500">
+              <%= t("super_admin.exports.index.empty") %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @pagy.pages > 1 %>
+    <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+      <%== pagy_nav(@pagy) %>
+    </div>
+  <% end %>
+</div>

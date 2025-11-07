@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/ThibautBaissac/super_admin/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 📖 Documentation
+    url: https://github.com/ThibautBaissac/super_admin#readme
+    about: Read the documentation
+  - name: 🔒 Security Issue
+    url: https://github.com/ThibautBaissac/super_admin/security/advisories/new
+    about: Report a security vulnerability privately

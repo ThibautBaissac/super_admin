@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Script to build SuperAdmin's Tailwind CSS
+
+set -e
+
+echo "🎨 Building SuperAdmin Tailwind CSS..."
+
+# Get the directory of this script
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+
+cd "$PROJECT_ROOT"
+
+# Check if bundler is available
+if ! command -v bundle &> /dev/null; then
+  echo "❌ Bundler not found! Please install it with: gem install bundler"
+  exit 1
+fi
+
+# Check if tailwindcss-rails is installed
+if ! bundle show tailwindcss-rails &> /dev/null; then
+  echo "❌ tailwindcss-rails gem not found!"
+  echo "Please run: bundle install"
+  exit 1
+fi
+
+# Get the path to tailwindcss binary from the gem
+TAILWINDCSS_RUBY_PATH=$(bundle show tailwindcss-ruby)
+TAILWINDCSS_BIN="$TAILWINDCSS_RUBY_PATH/exe/tailwindcss"
+
+if [ ! -f "$TAILWINDCSS_BIN" ]; then
+  echo "❌ Tailwind CSS binary not found at: $TAILWINDCSS_BIN"
+  exit 1
+fi
+
+# Build the CSS
+echo "Building CSS with Tailwind CLI from gem..."
+"$TAILWINDCSS_BIN" \
+  -i ./app/assets/stylesheets/super_admin/tailwind.source.css \
+  -o ./app/assets/stylesheets/super_admin/tailwind.css \
+  --minify
+
+echo "✅ CSS built successfully at app/assets/stylesheets/super_admin/tailwind.css"
+echo "📦 File size: $(du -h ./app/assets/stylesheets/super_admin/tailwind.css | cut -f1)"

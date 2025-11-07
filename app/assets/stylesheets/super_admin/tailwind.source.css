@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* SuperAdmin custom styles */
+/* These styles extend Tailwind's utility classes for SuperAdmin-specific needs */
+
+@layer utilities {
+  /* Ensure mobile menu overlay appears above content */
+  .z-mobile-menu {
+    z-index: 40;
+  }
+
+  /* Smooth transitions for mobile menu */
+  .transition-sidebar {
+    transition: transform 0.3s ease-in-out;
+  }
+}
+
+@layer base {
+  /* Prevent horizontal scroll on mobile */
+  body {
+    overflow-x: hidden;
+  }
+}

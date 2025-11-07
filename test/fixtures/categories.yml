@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+technology:
+  name: Technology
+  description: All things tech
+  position: 1
+  visible: true
+  slug: technology
+  posts_count: 0
+
+lifestyle:
+  name: Lifestyle
+  description: Life, health, and wellness
+  position: 2
+  visible: true
+  slug: lifestyle
+  posts_count: 0
+
+business:
+  name: Business
+  description: Business and entrepreneurship
+  position: 3
+  visible: true
+  slug: business
+  posts_count: 0
+
+hidden_category:
+  name: Hidden Category
+  description: This category is not visible
+  position: 99
+  visible: false
+  slug: hidden-category
+  posts_count: 0

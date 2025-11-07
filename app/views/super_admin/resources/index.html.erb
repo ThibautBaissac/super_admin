@@ -1,0 +1,189 @@
+<% content_for :title, model_display_name(@model_class) %>
+<% content_for :breadcrumbs do %>
+  <li class="flex items-center">
+    <svg class="h-5 w-5 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+    </svg>
+    <span class="text-gray-900 font-medium"><%= model_display_name(@model_class) %></span>
+  </li>
+<% end %>
+
+<% applied_filters = @applied_filters || {} %>
+
+<div class="max-w-full mx-auto">
+  <!-- Flash messages container for Turbo Streams -->
+  <div id="flash_messages"></div>
+  <!-- Header -->
+  <div class="mb-4 sm:mb-6 flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between">
+    <div class="min-w-0 flex-1">
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 truncate"><%= model_display_name(@model_class) %></h1>
+      <p class="mt-1 text-xs sm:text-sm text-gray-600">
+        <%= t("super_admin.resources.index.records_count", count: @pagy.count, total: number_with_delimiter(@pagy.count)) %>
+      </p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <%= button_to t("super_admin.resources.index.export_csv"), super_admin_exports_path, method: :post, params: { resource: params[:resource], search: params[:search], sort: params[:sort], direction: params[:direction], filters: applied_filters.presence }, form_class: "inline-block", class: "inline-flex items-center px-3 sm:px-4 py-2 border border-gray-300 text-xs sm:text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+      <%= link_to t("super_admin.resources.index.new"), super_admin_new_resource_path(resource: params[:resource]), class: "inline-flex items-center px-3 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover-bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus-ring-blue-500" %>
+    </div>
+  </div>
+
+  <!-- Search & Filters -->
+  <%= form_with url: super_admin_resources_path(resource: params[:resource]), method: :get, local: true, class: "mb-6 sm:mb-8 space-y-4" do %>
+    <div class="flex flex-col gap-3 sm:flex-row bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4">
+      <%= text_field_tag :search, params[:search], placeholder: t("super_admin.resources.shared.search_placeholder"), class: "flex-1 rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-2.5" %>
+      <div class="flex gap-2">
+        <% if params[:sort].present? %>
+          <%= hidden_field_tag :sort, params[:sort] %>
+        <% end %>
+        <% if params[:direction].present? %>
+          <%= hidden_field_tag :direction, params[:direction] %>
+        <% end %>
+        <%= submit_tag t("super_admin.resources.shared.search_button"), class: "inline-flex items-center px-3 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white bg-gray-700 hover-bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors" %>
+        <% if params[:search].present? %>
+          <%= link_to t("super_admin.resources.shared.reset_filters"), super_admin_resources_path(resource: params[:resource]), class: "inline-flex items-center px-3 sm:px-4 py-2 border border-gray-300 text-xs sm:text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus-ring-blue-500 transition-colors" %>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @filter_definitions.any? %>
+      <div class="rounded-lg border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+          <h2 class="text-xs sm:text-sm font-semibold text-gray-800 flex items-center">
+            <svg class="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+            </svg>
+            <%= t("super_admin.resources.shared.advanced_filters") %>
+          </h2>
+        </div>
+        <div class="px-4 sm:px-6 py-4 sm:py-5">
+          <div class="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <% @filter_definitions.each do |definition| %>
+              <div class="space-y-2">
+                <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider"><%= definition.label %></label>
+              <% case definition.type
+                 when :string, :text %>
+                <%= text_field_tag "filters[#{definition.attribute}_contains]", filter_value(applied_filters, "#{definition.attribute}_contains"), class: "w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 sm:text-sm bg-white px-3 py-2", placeholder: t("super_admin.resources.shared.contains_placeholder") %>
+              <% when :boolean %>
+                <% options = [[t("super_admin.resources.shared.boolean_options.placeholder"), ""], [t("super_admin.resources.shared.boolean_options.yes"), "true"], [t("super_admin.resources.shared.boolean_options.no"), "false"]] %>
+                <%= select_tag "filters[#{definition.attribute}_equals]", options_for_select(options, filter_value(applied_filters, "#{definition.attribute}_equals")), include_blank: false, class: "w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 sm:text-sm bg-white px-3 py-2" %>
+              <% when :enum %>
+                <% enum_options = [[t("super_admin.resources.shared.boolean_options.placeholder"), ""]] + definition.options.map { |opt| [opt.to_s.humanize, opt] } %>
+                <%= select_tag "filters[#{definition.attribute}_equals]", options_for_select(enum_options, filter_value(applied_filters, "#{definition.attribute}_equals")), include_blank: false, class: "w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 sm:text-sm bg-white px-3 py-2" %>
+              <% when :integer %>
+                <div class="flex gap-2">
+                  <%= number_field_tag "filters[#{definition.attribute}_min]", filter_value(applied_filters, "#{definition.attribute}_min"), class: "w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 sm:text-sm bg-white px-3 py-2", placeholder: t("super_admin.resources.shared.min_placeholder"), step: 1 %>
+                  <%= number_field_tag "filters[#{definition.attribute}_max]", filter_value(applied_filters, "#{definition.attribute}_max"), class: "w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 sm:text-sm bg-white px-3 py-2", placeholder: t("super_admin.resources.shared.max_placeholder"), step: 1 %>
+                </div>
+              <% when :float, :decimal %>
+                <div class="flex gap-2">
+                  <%= number_field_tag "filters[#{definition.attribute}_min]", filter_value(applied_filters, "#{definition.attribute}_min"), class: "w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 sm:text-sm bg-white px-3 py-2", placeholder: t("super_admin.resources.shared.min_placeholder"), step: 0.01 %>
+                  <%= number_field_tag "filters[#{definition.attribute}_max]", filter_value(applied_filters, "#{definition.attribute}_max"), class: "w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 sm:text-sm bg-white px-3 py-2", placeholder: t("super_admin.resources.shared.max_placeholder"), step: 0.01 %>
+                </div>
+              <% when :date %>
+                <div class="flex gap-2">
+                  <%= date_field_tag "filters[#{definition.attribute}_from]", filter_date_value(applied_filters, "#{definition.attribute}_from"), class: "w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 sm:text-sm bg-white px-3 py-2" %>
+                  <%= date_field_tag "filters[#{definition.attribute}_to]", filter_date_value(applied_filters, "#{definition.attribute}_to"), class: "w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 sm:text-sm bg-white px-3 py-2" %>
+                </div>
+              <% when :datetime %>
+                <div class="flex gap-2">
+                  <%= datetime_field_tag "filters[#{definition.attribute}_from]", filter_datetime_value(applied_filters, "#{definition.attribute}_from"), class: "w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 sm:text-sm bg-white px-3 py-2" %>
+                  <%= datetime_field_tag "filters[#{definition.attribute}_to]", filter_datetime_value(applied_filters, "#{definition.attribute}_to"), class: "w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 sm:text-sm bg-white px-3 py-2" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <div class="px-4 sm:px-6 mt-4 sm:mt-6 pt-4 border-t border-gray-200 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
+          <%= link_to t("super_admin.resources.shared.clear_filters"), super_admin_resources_path(resource: params[:resource], search: params[:search], sort: params[:sort], direction: params[:direction]), class: "inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-xs sm:text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus-ring-blue-500 transition-colors" %>
+          <%= submit_tag t("super_admin.resources.shared.apply_filters"), class: "inline-flex items-center justify-center px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white bg-blue-600 hover-bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus-ring-blue-500 shadow-sm transition-colors" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <% end %>
+
+  <!-- Table & Bulk actions -->
+  <%= form_with url: super_admin_bulk_action_path(resource: params[:resource]), method: :post, local: true, data: { controller: "super-admin--bulk-selection" }, class: "bg-white rounded-lg shadow overflow-hidden border border-gray-200" do %>
+    <%= hidden_field_tag :search, params[:search] if params[:search].present? %>
+    <%= hidden_field_tag :sort, params[:sort] if params[:sort].present? %>
+    <%= hidden_field_tag :direction, params[:direction] if params[:direction].present? %>
+    <% applied_filters.each do |key, value| %>
+      <%= hidden_field_tag "filters[#{key}]", value %>
+    <% end %>
+
+    <div class="flex flex-col gap-2 border-b border-gray-200 bg-gray-50 p-3 sm:p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div class="text-xs sm:text-sm text-gray-600" data-super-admin--bulk-selection-target="summary">
+        <span data-super-admin--bulk-selection-target="counter">0</span> <%= t("super_admin.resources.shared.bulk.selected_suffix") %>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-2">
+        <%= select_tag :bulk_action, options_for_select([[t("super_admin.resources.shared.bulk.action_placeholder"), ""], [t("super_admin.resources.shared.bulk.destroy_action"), "destroy"]]), class: "rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus-ring-blue-500 text-xs sm:text-sm px-3 py-2" %>
+        <%= submit_tag t("super_admin.resources.shared.bulk.apply"), class: "inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white bg-red-600 hover-bg-red-700", data: { turbo_confirm: t("super_admin.resources.shared.bulk.confirm") } %>
+      </div>
+    </div>
+
+    <% if @resources.any? %>
+      <div class="overflow-x-auto -mx-3 sm:mx-0">
+        <div class="inline-block min-w-full align-middle">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="w-12 px-3 sm:px-4 py-3">
+                  <%= check_box_tag "select_all", "1", false,
+                      id: "select_all",
+                      class: "rounded border-gray-300",
+                      aria: { label: t("super_admin.resources.shared.bulk.select_all_label") },
+                      data: { action: "super-admin--bulk-selection#toggleAll", super_admin__bulk_selection_target: "toggle" } %>
+                </th>
+                <% @attributes.first(8).each do |attr| %>
+                  <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                    <%= @model_class.human_attribute_name(attr) %>
+                  </th>
+                <% end %>
+                <th scope="col" class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                  <%= t("super_admin.resources.index.actions_header") %>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            <% @resources.each do |resource| %>
+              <tr id="resource_row_<%= resource.id %>" class="hover:bg-gray-50">
+                <td class="px-3 sm:px-4 py-3 sm:py-4">
+                  <%= check_box_tag "resource_ids[]", resource.id, false,
+                      id: "resource_#{resource.id}",
+                      class: "rounded border-gray-300",
+                      aria: { label: t("super_admin.resources.shared.bulk.select_item_label", id: resource.id) },
+                      data: { action: "super-admin--bulk-selection#itemChanged", super_admin__bulk_selection_target: "checkbox" } %>
+                </td>
+                <% @attributes.first(8).each do |attr| %>
+                  <td class="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-900">
+                    <div class="max-w-xs truncate">
+                      <%= truncate(format_attribute_value(resource, attr), length: 50) %>
+                    </div>
+                  </td>
+                <% end %>
+                <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-right text-xs sm:text-sm font-medium">
+                  <div class="flex justify-end gap-2 sm:space-x-2">
+                    <%= link_to t("super_admin.resources.index.view"), super_admin_resource_path(resource: params[:resource], id: resource.id), class: "text-blue-600 hover-text-blue-900" %>
+                    <%= link_to t("super_admin.resources.index.edit"), super_admin_edit_resource_path(resource: params[:resource], id: resource.id), class: "text-indigo-600 hover:text-indigo-900" %>
+                    <%= link_to t("super_admin.resources.index.delete"), super_admin_resource_path(resource: params[:resource], id: resource.id), data: { turbo_method: :delete, turbo_confirm: t("super_admin.resources.index.delete_confirm") }, class: "text-red-600 hover-text-red-900" %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    <% else %>
+      <div class="p-4 sm:p-6 text-center text-xs sm:text-sm text-gray-500">
+        <%= t("super_admin.resources.index.empty_state") %>
+      </div>
+    <% end %>
+
+    <% if @pagy.pages > 1 %>
+      <div class="bg-white px-3 sm:px-4 py-3 border-t border-gray-200 sm:px-6">
+        <%== pagy_nav(@pagy) %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

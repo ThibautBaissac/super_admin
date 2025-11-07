@@ -1,0 +1,63 @@
+one:
+  user: john
+  category: technology
+  title: Sample Post
+  body: This is a sample post body used for legacy fixture references
+  status: published
+  published_at: <%= Time.current %>
+  view_count: 10
+  featured: false
+
+# Post fixtures for testing
+first_post:
+  user: john
+  category: technology
+  title: First Post
+  body: This is the first post body with detailed content about technology
+  status: published
+  published_at: <%= 1.day.ago %>
+  view_count: 150
+  featured: true
+  metadata: '{"seo_title": "First Post SEO", "seo_description": "SEO description", "author_notes": "Featured article"}'
+
+second_post:
+  user: jane
+  category: lifestyle
+  title: Second Post
+  body: This is the second post body about lifestyle and wellness
+  status: draft
+  published_at: null
+  view_count: 0
+  featured: false
+  metadata: '{"author_notes": "Draft in progress"}'
+
+archived_post:
+  user: john
+  category: business
+  title: Archived Post
+  body: This post has been archived and is no longer active
+  status: archived
+  published_at: <%= 7.days.ago %>
+  view_count: 75
+  featured: false
+
+popular_post:
+  user: jane
+  category: technology
+  title: Popular Technology Post
+  body: This is a very popular post with many views and engagement
+  status: published
+  published_at: <%= 3.days.ago %>
+  view_count: 500
+  featured: true
+  metadata: '{"seo_title": "Popular Tech Post", "seo_description": "Trending technology content"}'
+
+uncategorized_post:
+  user: admin
+  category: null
+  title: Uncategorized Post
+  body: This post does not belong to any category
+  status: published
+  published_at: <%= 2.days.ago %>
+  view_count: 25
+  featured: false

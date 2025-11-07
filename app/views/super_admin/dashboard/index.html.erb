@@ -1,0 +1,79 @@
+<% content_for :title, t("super_admin.dashboard.index.page_title") %>
+<% content_for :breadcrumbs do %>
+  <li class="flex items-center">
+    <span class="text-gray-900 font-medium"><%= t("super_admin.dashboard.index.breadcrumb") %></span>
+  </li>
+<% end %>
+
+<div class="max-w-full mx-auto">
+  <!-- Header -->
+  <div class="mb-6 sm:mb-8">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900"><%= t("super_admin.dashboard.index.heading") %></h1>
+    <p class="mt-2 text-xs sm:text-sm text-gray-600">
+      <%= t("super_admin.dashboard.index.intro") %>
+    </p>
+  </div>
+
+  <!-- Models Table -->
+  <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+    <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+      <h2 class="text-base sm:text-lg font-medium text-gray-900"><%= t("super_admin.dashboard.index.table.title") %></h2>
+    </div>
+    <div class="overflow-x-auto -mx-3 sm:mx-0">
+      <div class="inline-block min-w-full align-middle">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                <%= t("super_admin.dashboard.index.table.headers.model") %>
+              </th>
+              <th scope="col" class="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= t("super_admin.dashboard.index.table.headers.table") %>
+              </th>
+              <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                <%= t("super_admin.dashboard.index.table.headers.records") %>
+              </th>
+              <th scope="col" class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                <%= t("super_admin.dashboard.index.table.headers.actions") %>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @models_info.each do |model_info| %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10 bg-gray-200 rounded-full flex items-center justify-center">
+                      <span class="text-xs sm:text-sm font-medium text-gray-700">
+                        <%= model_info[:name][0..1].upcase %>
+                      </span>
+                    </div>
+                    <div class="ml-3 sm:ml-4 min-w-0">
+                    <div class="text-xs sm:text-sm font-medium text-gray-900 truncate">
+                      <%= model_info[:human_name] %>
+                    </div>
+                    <div class="text-xs sm:text-sm text-gray-500 truncate">
+                      <%= model_info[:name] %>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex px-2 py-1 text-xs font-mono leading-5 rounded-md bg-gray-100 text-gray-800">
+                  <%= model_info[:table_name] %>
+                </span>
+              </td>
+              <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                <%= number_with_delimiter(model_info[:count]) %>
+              </td>
+              <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-right text-xs sm:text-sm font-medium">
+                <%= link_to t("super_admin.dashboard.index.table.manage"), model_info[:path], class: "text-blue-600 hover-text-blue-900" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>

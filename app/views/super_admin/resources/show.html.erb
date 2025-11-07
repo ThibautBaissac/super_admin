@@ -1,0 +1,106 @@
+<% content_for :title, t("super_admin.resources.show.page_title", model: model_display_name(@model_class)) %>
+<% content_for :breadcrumbs do %>
+  <li class="flex items-center">
+    <svg class="h-5 w-5 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+    </svg>
+    <%= link_to model_display_name(@model_class), super_admin_resources_path(resource: params[:resource]), class: "text-blue-600 hover-text-blue-800" %>
+  </li>
+  <li class="flex items-center">
+    <svg class="h-5 w-5 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+    </svg>
+    <span class="text-gray-900 font-medium"><%= t("super_admin.resources.show.breadcrumb_id", id: @resource.id) %></span>
+  </li>
+<% end %>
+
+<div class="max-w-4xl mx-auto">
+  <!-- Header -->
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">
+        <%= t("super_admin.resources.show.heading", model: model_display_name(@model_class), id: @resource.id) %>
+      </h1>
+    </div>
+    <div class="flex space-x-2">
+      <%= link_to t("super_admin.resources.show.edit"), super_admin_edit_resource_path(resource: params[:resource], id: @resource.id), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover-bg-blue-700" %>
+      <%= button_to t("super_admin.resources.show.delete"), super_admin_resource_path(resource: params[:resource], id: @resource.id), method: :delete, data: { turbo_confirm: t("super_admin.resources.show.delete_confirm") }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover-bg-red-700" %>
+    </div>
+  </div>
+
+  <!-- Attributes Card -->
+  <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden mb-6">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg font-medium text-gray-900"><%= t("super_admin.resources.show.attributes") %></h2>
+    </div>
+    <div class="px-6 py-4">
+      <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+        <% @attributes.each do |attr| %>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">
+              <%= @model_class.human_attribute_name(attr) %>
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              <%= format_attribute_value(@resource, attr) %>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Associations -->
+  <% if @associations.any? %>
+    <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900"><%= t("super_admin.resources.show.associations") %></h2>
+      </div>
+      <div class="px-6 py-4">
+        <dl class="space-y-4">
+          <% @associations.each do |assoc| %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">
+                <%= assoc.name.to_s.humanize %>
+                <span class="ml-2 text-xs text-gray-400">(<%= assoc.macro %>)</span>
+              </dt>
+              <dd class="mt-1 text-sm text-gray-900">
+                <% if assoc.macro == :has_many %>
+                  <% count = @association_counts.fetch(assoc.name, 0) %>
+                  <% if count.positive? %>
+                    <% counter = content_tag(:span, count, class: "font-medium") %>
+                    <%= t("super_admin.resources.show.association_count_html", count: count, number: counter) %>
+                  <% else %>
+                    <span class="text-gray-400 italic"><%= t("super_admin.resources.show.association_none") %></span>
+                  <% end %>
+                <% else %>
+                  <% begin %>
+                    <% associated = @resource.public_send(assoc.name) %>
+                    <% if associated.nil? %>
+                      <span class="text-gray-400 italic"><%= t("super_admin.resources.show.association_none") %></span>
+                    <% elsif associated.is_a?(ActiveRecord::Base) %>
+                      <span class="font-medium">#<%= associated.id %></span>
+                    <% else %>
+                      <%= associated.to_s %>
+                    <% end %>
+                  <% rescue StandardError => e %>
+                    <span class="text-red-600 text-xs"><%= t("super_admin.resources.show.association_error", message: e.message) %></span>
+                  <% end %>
+                <% end %>
+              </dd>
+            </div>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Timestamps -->
+  <div class="mt-6 text-sm text-gray-500 text-center">
+    <% if @resource.respond_to?(:created_at) %>
+      <%= t("super_admin.resources.show.created_at", date: l(@resource.created_at, format: :long)) %>
+    <% end %>
+    <% if @resource.respond_to?(:updated_at) && @resource.updated_at != @resource.created_at %>
+      • <%= t("super_admin.resources.show.updated_at", date: l(@resource.updated_at, format: :long)) %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+one:
+  email: one@example.com
+  name: User One
+  role: admin
+  active: true
+  posts_count: 0
+  comments_count: 0
+
+# User fixtures for testing
+john:
+  email: john@example.com
+  name: John Doe
+  role: user
+  active: true
+  posts_count: 0
+  comments_count: 0
+
+jane:
+  email: jane@example.com
+  name: Jane Smith
+  role: moderator
+  active: true
+  posts_count: 0
+  comments_count: 0
+
+admin:
+  email: admin@example.com
+  name: Admin User
+  role: admin
+  active: true
+  posts_count: 0
+  comments_count: 0
+
+inactive:
+  email: inactive@example.com
+  name: Inactive User
+  role: user
+  active: false
+  posts_count: 0
+  comments_count: 0

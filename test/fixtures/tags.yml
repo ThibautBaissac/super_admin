@@ -1,0 +1,26 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+ruby:
+  name: ruby
+  color: "#CC342D"
+  usage_count: 10
+
+rails:
+  name: rails
+  color: "#CC0000"
+  usage_count: 15
+
+javascript:
+  name: javascript
+  color: "#F7DF1E"
+  usage_count: 8
+
+tutorial:
+  name: tutorial
+  color: "#007ACC"
+  usage_count: 5
+
+beginner:
+  name: beginner
+  color: "#28A745"
+  usage_count: 3

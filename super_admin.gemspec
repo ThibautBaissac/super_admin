@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "lib/super_admin/version"
 
 Gem::Specification.new do |spec|
@@ -5,22 +7,33 @@ Gem::Specification.new do |spec|
   spec.version     = SuperAdmin::VERSION
   spec.authors     = [ "Thibaut Baissac" ]
   spec.email       = [ "tbaissac@gmail.com" ]
-  spec.homepage    = "TODO"
-  spec.summary     = "TODO: Summary of SuperAdmin."
-  spec.description = "TODO: Description of SuperAdmin."
+
+  spec.summary     = "A modern, flexible administration engine for Rails applications"
+  spec.description = "SuperAdmin is a mountable Rails engine that provides a full-featured administration interface inspired by Administrate and ActiveAdmin, built for modern Rails 7+ applications."
+  spec.homepage    = "https://github.com/ThibautBaissac/super_admin"
   spec.license     = "MIT"
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the "allowed_push_host"
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
+  spec.required_ruby_version = ">= 3.2"
 
-  spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
-  spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
+  spec.metadata = {
+    "homepage_uri" => spec.homepage,
+    "source_code_uri" => spec.homepage,
+    "changelog_uri" => "#{spec.homepage}/blob/main/CHANGELOG.md",
+    "bug_tracker_uri" => "#{spec.homepage}/issues",
+    "documentation_uri" => "#{spec.homepage}#readme",
+    "rubygems_mfa_required" => "true"
+  }
 
-  spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  spec.files = Dir.chdir(__dir__) do
+    Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"].select do |path|
+      File.file?(File.join(__dir__, path))
+    end
   end
 
-  spec.add_dependency "rails", ">= 8.1.1"
+  spec.add_dependency "rails", ">= 7.1", "< 9.0"
+  spec.add_dependency "pagy", ">= 9.0"
+  spec.add_dependency "turbo-rails", ">= 2.0"
+  spec.add_dependency "stimulus-rails", ">= 1.3"
+  spec.add_dependency "rack-attack", ">= 6.0"
+  spec.add_dependency "csv"
 end

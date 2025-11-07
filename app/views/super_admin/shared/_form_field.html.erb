@@ -1,0 +1,35 @@
+<%# Rendu d'un champ de formulaire selon son type %>
+<%# Locals: form, model_class, attribute_name %>
+
+<% builder = SuperAdmin::FormBuilder.new(model_class: model_class, form: form, attribute_name: attribute_name) %>
+
+<% if builder.field_type == :nested %>
+  <%= builder.build_field %>
+<% else %>
+  <div class="mb-4">
+    <%= form.label attribute_name, builder.field_label, class: "block text-sm font-medium text-gray-700 mb-1" %>
+
+    <% case builder.field_type %>
+    <% when :boolean %>
+      <div class="flex items-center">
+        <%= builder.build_field %>
+        <span class="ml-2 text-sm text-gray-600"><%= t("super_admin.resources.form.boolean_hint") %></span>
+      </div>
+    <% else %>
+      <%= builder.build_field %>
+    <% end %>
+
+    <% if form.object.errors[attribute_name].any? %>
+      <p class="mt-1 text-sm text-red-600">
+        <%= form.object.errors[attribute_name].to_sentence %>
+      </p>
+    <% end %>
+
+    <% column = model_class.columns_hash[attribute_name.to_s] %>
+    <% if column && column.comment.present? %>
+      <p class="mt-1 text-xs text-gray-500">
+        <%= column.comment %>
+      </p>
+    <% end %>
+  </div>
+<% end %>
