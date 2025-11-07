@@ -32,6 +32,6 @@ group :development do
   gem "bullet"
   gem "yard", "~> 0.9", require: false
   gem "yard-rails", require: false
-  gem "tailwindcss-rails", "~> 3.0", require: false
+  gem "tailwindcss-rails", "~> 4.4", require: false
   gem "propshaft", "~> 1.0"
 end
