@@ -1,4 +1,4 @@
-# SuperAdmin 🚀
+# SuperAdmin
 
 [![Gem Version](https://badge.fury.io/rb/super_admin.svg)](https://badge.fury.io/rb/super_admin)
 [![CI Status](https://github.com/ThibautBaissac/super_admin/actions/workflows/ci.yml/badge.svg)](https://github.com/ThibautBaissac/super_admin/actions/workflows/ci.yml)
@@ -39,7 +39,7 @@ SuperAdmin is a mountable Rails engine that provides a full-featured administrat
 ### 1. Add the Gem
 
 ```ruby
-gem "super_admin", git: "https://github.com/ThibautBaissac/super_admin.git"
+gem "super_admin", "~> 0.2.0"
 ```
 
 Then run:

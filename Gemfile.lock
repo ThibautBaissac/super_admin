@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    super_admin (0.2.0)
+    super_admin (0.2.1)
       csv
       pagy (>= 9.0)
       rack-attack (>= 6.0)
